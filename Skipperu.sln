@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36301.6 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuxTest", "LuxTest.csproj", "{A62B8DFC-A291-4895-9CF2-24532F7A8169}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A62B8DFC-A291-4895-9CF2-24532F7A8169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A62B8DFC-A291-4895-9CF2-24532F7A8169}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A62B8DFC-A291-4895-9CF2-24532F7A8169}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A62B8DFC-A291-4895-9CF2-24532F7A8169}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A81A54F-5BED-4513-9210-1D7C8A271622}
+	EndGlobalSection
+EndGlobal

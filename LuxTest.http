@@ -1,0 +1,6 @@
+@Skipperu_HostAddress = http://localhost:5162
+
+GET {{Skipperu_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

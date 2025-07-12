@@ -1,0 +1,27 @@
+## Build output
+bin/
+obj/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## VS working folder
+.vs/
+
+## IIS Express settings
+*.vspscc
+*.vssscc
+
+## Publish profiles
+*.pubxml
+*.publish.xml
+*.pubxml.user
+
+## Local development settings
+Properties/launchSettings.json
+
+## Logs
+*.log
