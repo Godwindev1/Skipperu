@@ -13,10 +13,10 @@ namespace Skipperu.Models.Requests.client.proxy
             RestRequest Request = new RestRequest(RequestContext.Endpoint, Method);
             Request.AddHeader("Content-Type", "application/json");
 
-            if (!RequestContext.HeaderKVP.IsNullOrEmpty()) { Request.AddHeaders(RequestContext.HeaderKVP); }
-            if (!RequestContext.BodyKVP.IsNullOrEmpty()) { Request.AddJsonBody(RequestContext.BodyKVP); }
+            if (!RequestContext.HeaderKVP.Any() == true) { Request.AddHeaders(RequestContext.HeaderKVP); }
+            if (!RequestContext.BodyKVP.Any() == true) { Request.AddJsonBody(RequestContext.BodyKVP); }
 
-            if (!RequestContext.QueryParametersKVP.IsNullOrEmpty())
+            if (!RequestContext.QueryParametersKVP.Any() == true)
             {
                 foreach (var param in RequestContext.QueryParametersKVP)
                 {

@@ -1,6 +1,8 @@
-using Skipperu.Data.Users.data.AspIdentityAuth.data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Skipperu.Data;
+using Skipperu.MappingProfile;
 
 namespace Skipperu
 {
@@ -16,6 +18,7 @@ namespace Skipperu
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper((action => action.AddProfile(typeof(AutomapperProfile))));
             builder.Services.AddDbContext<UserAuthenticationDBcontext>( options =>
             {
                 options.UseSqlServer("Server=localhost,1436;Database=LuxDB;User Id=sa;Password=TestServerDefault1@1#$&;TrustServerCertificate=True;");
@@ -23,7 +26,6 @@ namespace Skipperu
             );
             builder.Services.AddAuthentication();
             builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<UserAuthenticationDBcontext>();
-
             var app = builder.Build();
 
             app.MapIdentityApi<IdentityUser>();

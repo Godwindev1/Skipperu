@@ -51,6 +51,17 @@ namespace Skipperu.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ExternalAuthUsers",
+                columns: table => new
+                {
+                    PrimaryKey = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExternalAuthUsers", x => x.PrimaryKey);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -156,6 +167,71 @@ namespace Skipperu.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "GlobalUsers",
+                columns: table => new
+                {
+                    GlobalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AspFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ExternalAuthFK = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GlobalUsers", x => x.GlobalUserID);
+                    table.ForeignKey(
+                        name: "FK_GlobalUsers_AspNetUsers_AspFK",
+                        column: x => x.AspFK,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_GlobalUsers_ExternalAuthUsers_ExternalAuthFK",
+                        column: x => x.ExternalAuthFK,
+                        principalTable: "ExternalAuthUsers",
+                        principalColumn: "PrimaryKey");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GlobalRequestCollection",
+                columns: table => new
+                {
+                    FolderRootID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FolderName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GlobalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ParentFolderID = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GlobalRequestCollection", x => x.FolderRootID);
+                    table.ForeignKey(
+                        name: "FK_GlobalRequestCollection_GlobalUsers_GlobalUserID",
+                        column: x => x.GlobalUserID,
+                        principalTable: "GlobalUsers",
+                        principalColumn: "GlobalUserID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "requests",
+                columns: table => new
+                {
+                    RequestID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Host = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Endpoint = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QueryParametersJSON = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HeaderJSON = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BodyJSON = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ParentFolderID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_requests", x => x.RequestID);
+                    table.ForeignKey(
+                        name: "FK_requests_GlobalRequestCollection_ParentFolderID",
+                        column: x => x.ParentFolderID,
+                        principalTable: "GlobalRequestCollection",
+                        principalColumn: "FolderRootID");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +270,26 @@ namespace Skipperu.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GlobalRequestCollection_GlobalUserID",
+                table: "GlobalRequestCollection",
+                column: "GlobalUserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GlobalUsers_AspFK",
+                table: "GlobalUsers",
+                column: "AspFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GlobalUsers_ExternalAuthFK",
+                table: "GlobalUsers",
+                column: "ExternalAuthFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_requests_ParentFolderID",
+                table: "requests",
+                column: "ParentFolderID");
         }
 
         /// <inheritdoc />
@@ -215,10 +311,22 @@ namespace Skipperu.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "requests");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "GlobalRequestCollection");
+
+            migrationBuilder.DropTable(
+                name: "GlobalUsers");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ExternalAuthUsers");
         }
     }
 }

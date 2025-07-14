@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.Tokens;
+using Azure;
 
 
 
@@ -37,7 +38,7 @@ namespace Skipperu.Controllers.param.binders
                 }
     
 
-                if(SkipperuRequestHandlerBodyData.IsNullOrEmpty())
+                if(SkipperuRequestHandlerBodyData?.Any() != true)
                 {
                     SkipperuRequestHandlerBodyData = new KvpList();
                     return;

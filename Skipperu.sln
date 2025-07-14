@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36301.6 d17.14
+VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuxTest", "LuxTest.csproj", "{A62B8DFC-A291-4895-9CF2-24532F7A8169}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skipperu", "Skipperu.csproj", "{A62B8DFC-A291-4895-9CF2-24532F7A8169}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
