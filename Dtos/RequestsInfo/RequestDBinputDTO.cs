@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Skipperu.Models.data
+namespace Skipperu.Dtos.RequestsInfo
 {
     public class RequestDBinputDTO
     {

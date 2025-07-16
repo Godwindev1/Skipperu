@@ -17,6 +17,8 @@ namespace Skipperu.Data.Users.data
         public string? AspFK { get; set; }     // Assume Identity uses string keys
         public string? ExternalAuthFK { get; set; }
 
+        public string UserName { get; set; }
+
         // Navigation
         public IdentityUser? AspUser { get; set; }
         public ExternalAuthUser? ExternalAuthUser { get; set; }

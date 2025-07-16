@@ -1,12 +1,12 @@
-﻿using Skipperu.Models.data.structs;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.Tokens;
 using Azure;
+using Skipperu.Dtos.RequestsInfo;
 
 
 
-namespace Skipperu.Controllers.param.binders
+namespace Skipperu.Tests.param.binders
 {
     using Desrializer = Newtonsoft.Json.JsonConvert;
     using KvpList = Dictionary<string, string>;
@@ -30,7 +30,7 @@ namespace Skipperu.Controllers.param.binders
                     }
                 }
 
-                else if((context.HttpContext.Request.HasJsonContentType()))
+                else if(context.HttpContext.Request.HasJsonContentType())
                 {
                     using var reader = new StreamReader(context.HttpContext.Request.Body);
                     var body = await reader.ReadToEndAsync();

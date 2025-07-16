@@ -12,7 +12,7 @@ using Skipperu.Data;
 namespace Skipperu.Migrations
 {
     [DbContext(typeof(UserAuthenticationDBcontext))]
-    [Migration("20250714122538_LuxDB")]
+    [Migration("20250716185958_LuxDB")]
     partial class LuxDB
     {
         /// <inheritdoc />
@@ -303,6 +303,10 @@ namespace Skipperu.Migrations
 
                     b.Property<string>("ExternalAuthFK")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GlobalUserID");
 

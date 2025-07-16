@@ -301,6 +301,10 @@ namespace Skipperu.Migrations
                     b.Property<string>("ExternalAuthFK")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("GlobalUserID");
 
                     b.HasIndex("AspFK");

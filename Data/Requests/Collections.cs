@@ -15,7 +15,7 @@ namespace Skipperu.Data.Requests
         public GlobalUser? UserNav { get; set; }
         public string? ParentFolderID { get; set; } //TODO: Change to CollectionParentFolderID
 
-        public List<RequestDBstore> SavedRequests { get; set; }
+        public virtual List<RequestDBstore> SavedRequests { get; set; }
 
     }
 }

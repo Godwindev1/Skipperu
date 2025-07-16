@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Skipperu.Data.Requests;
 using Skipperu.Data.Users.data;
-using Skipperu.Models.data;
-using Skipperu.Models.data.structs;
+using Skipperu.Dtos.RequestsInfo;
 
 
 namespace Skipperu.MappingProfile

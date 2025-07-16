@@ -1,7 +1,7 @@
 ﻿using Azure;
-using Skipperu.Models.data.structs;
 using Microsoft.IdentityModel.Tokens;
 using RestSharp;
+using Skipperu.Dtos.RequestsInfo;
 
 namespace Skipperu.Models.Requests.client.proxy
 {

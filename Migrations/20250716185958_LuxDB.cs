@@ -173,7 +173,8 @@ namespace Skipperu.Migrations
                 {
                     GlobalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AspFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ExternalAuthFK = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ExternalAuthFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

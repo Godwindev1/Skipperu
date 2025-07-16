@@ -1,22 +1,23 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Skipperu.Controllers.param.binders;
 using Skipperu.Data;
 using Skipperu.Data.Requests;
 using Skipperu.Data.Users.data;
 using Skipperu.Data.Users.data.ExternalAuth.data;
-using Skipperu.Models.data;
-using Skipperu.Models.data.structs;
+using Skipperu.Dtos.RequestsInfo;
 using Skipperu.Models.Requests.client.proxy;
+using Skipperu.Tests.param.binders;
 using System.Globalization;
 
-namespace Skipperu.Controllers
+namespace Skipperu.Tests
 {
 
     [ApiController]
     [Route("TEST")]
+    [Authorize(policy: "IsAdmin")]
     public class TestController : ControllerBase
     {
         RequestClientProxyModel Model;
@@ -33,12 +34,7 @@ namespace Skipperu.Controllers
 
             string sql = $"SELECT * FROM GlobalUsers WHERE ExternalAuthFK = 'ec5f7376-179f-42ae-bb7f-ebef9257cee3' ";
 
-            
-            if (__Context.GlobalUsers.FromSqlRaw<GlobalUser>(sql).Any() != true)
-            {
-                __Context.GlobalUsers.Add(TestAdmin);
-                __Context.SaveChanges();
-            }
+     
         }
 
         [HttpGet("get")]
@@ -90,7 +86,7 @@ namespace Skipperu.Controllers
             string sql = $"SELECT * FROM GlobalRequestCollection WHERE FolderName = '{FolderName}' ";
 
             try {
-                var Savedcollection = __Context.GlobalRequestCollection.FromSqlRaw<Collection>(sql).FirstOrDefault();
+                var Savedcollection = __Context.GlobalRequestCollection.FromSqlRaw(sql).FirstOrDefault();
 
                 if (Savedcollection == null)
                 {

@@ -1,10 +1,10 @@
-﻿using Skipperu.Controllers.param.binders;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Skipperu.Tests.param.binders;
 
-namespace Skipperu.Models.data.structs
+namespace Skipperu.Dtos.RequestsInfo
 {
     [ModelBinder(binderType: typeof(RequestInfoBinder))]
     public class RequestInfo
