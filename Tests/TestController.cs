@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Skipperu.Data;
+using Skipperu.Data.Repositories;
 using Skipperu.Data.Requests;
 using Skipperu.Data.Users.data;
 using Skipperu.Data.Users.data.ExternalAuth.data;
@@ -22,13 +23,15 @@ namespace Skipperu.Tests
     {
         RequestClientProxyModel Model;
 
-        private readonly UserAuthenticationDBcontext __Context;
         private readonly Mapper __MappingCtxt;
+        private readonly RequestsRepo _RequestsRepository;
+        private readonly CollectionsRepo _CollectionRepository;
 
-        public TestController(UserAuthenticationDBcontext Context, IMapper mappingContext)
+        public TestController( IRequestsRepo RequestRepo, ICollectionsRepo CollectionRepo, IMapper mappingContext)
         {
-            __MappingCtxt = (Mapper)mappingContext;
-            __Context = Context;
+            _RequestsRepository = (RequestsRepo)RequestRepo;
+            _CollectionRepository = (CollectionsRepo)CollectionRepo;
+
             Model = new RequestClientProxyModel();
             GlobalUser TestAdmin = new GlobalUser { ExternalAuthUser = new ExternalAuthUser { } };
 
@@ -61,7 +64,7 @@ namespace Skipperu.Tests
             return await Model.ForwardRequest(requestContxt, RestSharp.Method.Patch);
         }
 
-
+        [Authorize(policy: "IsUser")]
         [HttpOptions("options")]
         public async Task<ActionResult<string>> TestoptionsRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestInfo requestContxt)
         {
@@ -83,72 +86,7 @@ namespace Skipperu.Tests
         [HttpPost("SaveRequest")]
         public async Task<ActionResult<string>> TestSaveRequest([FromForm]RequestDBinputDTO requestContxt, [FromQuery]string FolderName)
         {
-            string sql = $"SELECT * FROM GlobalRequestCollection WHERE FolderName = '{FolderName}' ";
-
-            try {
-                var Savedcollection = __Context.GlobalRequestCollection.FromSqlRaw(sql).FirstOrDefault();
-
-                if (Savedcollection == null)
-                {
-                    var req = __MappingCtxt.Map<RequestDBstore>(requestContxt);
-                    var newCollection = new Collection
-                    {
-                        GlobalUserID = "a047e9e6-d389-4852-bdc8-0c11fc77b70a",
-                        FolderName = FolderName
-                    };
-
-                    var newRequest = new RequestDBstore
-                    {
-                        BodyJSON = req.BodyJSON,
-                        HeaderJSON = req.HeaderJSON,
-                        Endpoint = req.Endpoint,
-                        QueryParametersJSON = req.QueryParametersJSON,
-                        Host = req.Host,
-
-                        ParentFolder = newCollection // ✅ This tells EF the relationship
-                    };
-
-                    __Context.requests.Add(newRequest);
-
-                    int ? Res = __Context.SaveChanges();
-                
-                    if(Res != null)
-                    {
-                        return "Saved";
-                    }
-                }
-                else
-                {
-                    var req = __MappingCtxt.Map<RequestDBstore>(requestContxt);
-               
-
-                    var newRequest = new RequestDBstore
-                    {
-                        BodyJSON = req.BodyJSON,
-                        HeaderJSON = req.HeaderJSON,
-                        Endpoint = req.Endpoint,
-                        QueryParametersJSON = req.QueryParametersJSON,
-                        Host = req.Host,
-
-                        ParentFolder = Savedcollection // ✅ This tells EF the relationship
-                    };
-
-                    __Context.requests.Add(newRequest);
-
-                    int? Res = __Context.SaveChanges();
-
-                    if (Res != null)
-                    {
-                        return "Saved";
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-
-            return "Failed";
+            return "";
         }
     }
 }

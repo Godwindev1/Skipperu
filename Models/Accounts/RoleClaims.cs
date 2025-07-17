@@ -14,7 +14,7 @@
     public class GroupClaims
     {
         public static KVPRoleClaim RoleSuperAdmin = new KVPRoleClaim("Admin",
-            new List<Claim> { Claims.Admin });
+            new List<Claim> { Claims.Admin, Claims.User });
 
         public static KVPRoleClaim RoleUser = new KVPRoleClaim("User",
            new List<Claim> { Claims.User });

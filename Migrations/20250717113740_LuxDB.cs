@@ -174,7 +174,7 @@ namespace Skipperu.Migrations
                     GlobalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AspFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ExternalAuthFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -286,6 +286,12 @@ namespace Skipperu.Migrations
                 name: "IX_GlobalUsers_ExternalAuthFK",
                 table: "GlobalUsers",
                 column: "ExternalAuthFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GlobalUsers_UserName",
+                table: "GlobalUsers",
+                column: "UserName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_requests_ParentFolderID",

@@ -303,13 +303,16 @@ namespace Skipperu.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("GlobalUserID");
 
                     b.HasIndex("AspFK");
 
                     b.HasIndex("ExternalAuthFK");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("GlobalUsers");
                 });

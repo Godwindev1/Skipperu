@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Writers;
 using Skipperu.Data;
+using Skipperu.Data.Repositories;
 using Skipperu.MappingProfile;
 using Skipperu.Models.Accounts;
+using Skipperu.Repos.Users;
 
 namespace Skipperu
 {
@@ -16,7 +18,6 @@ namespace Skipperu
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -36,12 +37,22 @@ namespace Skipperu
                 options.AddPolicy("IsUser", claimOptions => claimOptions.RequireClaim(Claims.User.Type, Claims.User.Value));
             });
 
+
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<UserAuthenticationDBcontext>().AddDefaultTokenProviders();
+          
+            builder.Services.AddScoped<ICollectionsRepo, CollectionsRepo>();
+            builder.Services.AddScoped<IRequestsRepo, RequestsRepo>();
+            builder.Services.AddScoped<IGlobalUserRepo, GlobalUserRepo>();
+
+            builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+            {
+                options.ValidationInterval = TimeSpan.FromSeconds(30); 
+            });
+
             var app = builder.Build();
 
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
