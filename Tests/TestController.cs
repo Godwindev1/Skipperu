@@ -15,6 +15,7 @@ using System.Globalization;
 
 namespace Skipperu.Tests
 {
+    //TODO: FOLDERS MANAGEMENT, REQUESTS MANAGEMENT 
 
     [ApiController]
     [Route("TEST")]

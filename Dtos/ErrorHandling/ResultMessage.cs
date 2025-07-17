@@ -5,7 +5,8 @@
         ERROR = 1,
         INFO = 2,
         SUCCESFUL = 3,
-        NOTFOUND = 4
+        NOTFOUND = 4,
+        WARNING = 5
     }
     public class ResultMessage
     {

@@ -20,14 +20,14 @@ using Skipperu.Data.Requests;
                 await _context.GlobalRequestCollection.AddAsync(collection);
             }
 
-            public async Task<Collection?> GetByIdAsync(Guid id)
+            public async Task<Collection?> GetByIdAsync(string id)
             {
                 return await _context.GlobalRequestCollection
                     .Include(c => c.SavedRequests) 
                     .FirstOrDefaultAsync(c => c.FolderRootID == id.ToString());
             }
 
-            public async Task<IEnumerable<Collection>> GetAllByUserAsync(Guid globalUserId)
+            public async Task<IEnumerable<Collection>> GetAllByUserAsync(string globalUserId)
             {
                 return await _context.GlobalRequestCollection
                     .Where(c => c.GlobalUserID == globalUserId.ToString())
@@ -35,13 +35,22 @@ using Skipperu.Data.Requests;
                     .ToListAsync();
             }
 
-            public Task UpdateAsync(Collection collection)
+        public async Task<IEnumerable<Collection>> GetAllByParentFolderAsync(string ParentID)
+        {
+            return await _context.GlobalRequestCollection
+                .Where(c => c.ParentFolderID == ParentID)
+                .Include(c => c.SavedRequests)
+                .ToListAsync();
+        }
+
+
+        public Task UpdateAsync(Collection collection)
             {
                 _context.GlobalRequestCollection.Update(collection);
                 return Task.CompletedTask;
             }
 
-            public async Task DeleteAsync(Guid id)
+            public async Task DeleteAsync(string id)
             {
                 var collection = await _context.GlobalRequestCollection.FindAsync(id);
                 if (collection != null)

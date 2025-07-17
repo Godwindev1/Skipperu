@@ -24,14 +24,14 @@ namespace Skipperu.Data.Repositories
                 .FirstOrDefaultAsync(r => r.RequestID == id);
         }
 
-        public async Task<IEnumerable<RequestDBstore>> GetAllByFolderAsync(Guid folderId)
+        public async Task<IEnumerable<RequestDBstore>> GetAllByFolderAsync(string folderId)
         {
             return await _context.requests
                 .Where(r => r.ParentFolderID == folderId.ToString())
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<RequestDBstore>> GetAllByUserAsync(Guid globalUserId)
+        public async Task<IEnumerable<RequestDBstore>> GetAllByUserAsync(string globalUserId)
         {
             return await _context.requests
                 .Include(r => r.ParentFolder)
@@ -45,7 +45,7 @@ namespace Skipperu.Data.Repositories
             return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(string id)
         {
             var request = await _context.requests.FindAsync(id);
             if (request != null)

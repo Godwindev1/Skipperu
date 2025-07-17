@@ -130,10 +130,17 @@ namespace Skipperu.Controllers
 
         }
 
+
+        //TODO: CONFIRMATION EMAIL 
         [HttpPost("GetConfirmationCode")]
-        public async Task RequestConfirmationCode()
+        public async Task RequestConfirmationCode([FromForm] UserDataDto SignInInfo)
         {
 
+            if (_GlobalUserDBRepo.GetByUserName(SignInInfo.UserName) != null)
+            {
+                var AspIdentityUser = await _userManager.FindByEmailAsync(SignInInfo.UserName);
+                await _userManager.GenerateEmailConfirmationTokenAsync(AspIdentityUser);
+            }
         }
 
         [HttpPost("ApplyCode")]

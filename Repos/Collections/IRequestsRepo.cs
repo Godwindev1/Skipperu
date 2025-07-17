@@ -7,12 +7,12 @@ namespace Skipperu.Data.Repositories
         Task AddAsync(RequestDBstore request);
 
         Task<RequestDBstore?> GetByIdAsync(int id);
-        Task<IEnumerable<RequestDBstore>> GetAllByFolderAsync(Guid folderId);
-        Task<IEnumerable<RequestDBstore>> GetAllByUserAsync(Guid globalUserId);
+        Task<IEnumerable<RequestDBstore>> GetAllByFolderAsync(string folderId);
+        Task<IEnumerable<RequestDBstore>> GetAllByUserAsync(string globalUserId);
 
         Task UpdateAsync(RequestDBstore request);
 
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(string id);
 
         Task SaveAsync();
     }
