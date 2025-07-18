@@ -74,14 +74,34 @@ namespace Skipperu.Models.Collections
 
 
         }
-        public async Task<ResultMessage> DeleteFolder(string UserID, string FolderName, string ParentID)
+        
+        private async Task DeleteChildren(string ParentFolderID)
         {
-            var Folder =  (await collectionsRepo.GetAllByParentFolderAsync(ParentID))
-                .Where(x => x.FolderName == FolderName && x.GlobalUserID == UserID).FirstOrDefault();
+            var ParentFolderItems = (await collectionsRepo.GetAllByParentFolderAsync(ParentFolderID));
+
+            if(!ParentFolderItems.Any())
+            {
+                return;
+            }
+            else
+            {
+                foreach(Collection Item in ParentFolderItems)
+                {
+                    await collectionsRepo.DeleteAsync(Item.FolderRootID);
+                    await DeleteChildren(Item.FolderRootID);
+                }
+            }
+        }
+        
+        public async Task<ResultMessage> DeleteFolder(string UserID, string FolderName, string FolderPath)
+        {
+            var Folder =  (await collectionsRepo.GetAllByUserAsync(UserID))
+                .Where(x => x.FolderPath == FolderPath).FirstOrDefault();
             
             if(Folder != null)
             {
                 await collectionsRepo.DeleteAsync(Folder.FolderRootID);
+                await DeleteChildren(Folder.FolderRootID);
                 await collectionsRepo.SaveAsync();
 
                 return new ResultMessage { Message = "Folder Deleted", type = MessageTypes.SUCCESFUL };

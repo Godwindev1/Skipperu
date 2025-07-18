@@ -56,5 +56,23 @@ namespace Skipperu.Controllers
             return new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR };
         }
 
+
+
+        [HttpPost("DeleteFolder")]
+
+        public async Task<ActionResult<ResultMessage>> DeleteFolder(string FolderName, string FolderPath)
+        {
+            if (User.Identity != null)
+            {
+                var AspUser = await userManager.FindByNameAsync(User.Identity.Name);
+                var Globaluser = _UsersRepo.GetByUserName(AspUser.NormalizedUserName);
+
+                return await  collectionManagerModel.DeleteFolder(Globaluser.GlobalUserID, FolderName, FolderPath);
+            }
+
+            return new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR };
+
+        }
+
     }
 }
