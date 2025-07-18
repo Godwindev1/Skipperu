@@ -43,6 +43,13 @@ using Skipperu.Data.Requests;
                 .ToListAsync();
         }
 
+        public async Task<bool> DoesFolderExist(string GlobalUserID, string FolderPath)
+        {
+            return await _context.GlobalRequestCollection
+                .Where(c => c.GlobalUserID == GlobalUserID && c.FolderPath == FolderPath)
+                .AnyAsync();
+        }
+
 
         public Task UpdateAsync(Collection collection)
             {

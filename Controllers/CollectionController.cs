@@ -5,6 +5,7 @@ using Skipperu.Data.Repositories;
 using Skipperu.Dtos.ErrorHandling;
 using Skipperu.Models.Collections;
 using Skipperu.Repos.Users;
+using System.Net;
 
 namespace Skipperu.Controllers
 {
@@ -59,20 +60,66 @@ namespace Skipperu.Controllers
 
 
         [HttpPost("DeleteFolder")]
-
-        public async Task<ActionResult<ResultMessage>> DeleteFolder(string FolderName, string FolderPath)
+        public async Task<ActionResult<ResultMessage>> DeleteFolder(string FolderPath)
         {
             if (User.Identity != null)
             {
                 var AspUser = await userManager.FindByNameAsync(User.Identity.Name);
                 var Globaluser = _UsersRepo.GetByUserName(AspUser.NormalizedUserName);
 
-                return await  collectionManagerModel.DeleteFolder(Globaluser.GlobalUserID, FolderName, FolderPath);
+                return await  collectionManagerModel.DeleteFolder(Globaluser.GlobalUserID, FolderPath);
             }
 
             return new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR };
 
         }
 
+        [HttpPost("ChangeFolderName")]
+        public async Task<ActionResult<ResultMessage>> ChangeFolderName( string NewName, string FolderPath, string newFolderPath)
+        {
+            if (User.Identity != null)
+            {
+                var AspUser = await userManager.FindByNameAsync(User.Identity.Name);
+                var Globaluser = _UsersRepo.GetByUserName(AspUser.NormalizedUserName);
+
+                return await collectionManagerModel.ChangeFolderName(Globaluser.GlobalUserID, NewName, FolderPath, newFolderPath);
+            }
+
+            return new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR };
+
+        }
+
+        [HttpGet("GetSubFolders")]
+        public async Task GetSubFolders(string FolderName, string FolderPath)
+        {
+            if (User.Identity != null)
+            {
+                var AspUser = await userManager.FindByNameAsync(User.Identity.Name);
+                var Globaluser = _UsersRepo.GetByUserName(AspUser.NormalizedUserName);
+
+                var result = await collectionManagerModel.GetAllSubFolders(FolderName, Globaluser.GlobalUserID, FolderPath);
+
+                if(result == null)
+                {
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    await HttpContext.Response.WriteAsJsonAsync(new ResultMessage { Message = "Folder Des not Exist", type = MessageTypes.ERROR });
+                }
+                else
+                {
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    await HttpContext.Response.WriteAsJsonAsync(result);
+                }
+
+                    return;
+            }
+
+
+            HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            await HttpContext.Response.WriteAsJsonAsync(new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR });
+        }
+
+
+        //TODO: enpoint For Changing Folders Parent 
+        //Use Normalized Name FOr FOlders SO Users Cant Create Same Name With Different Case Combinations
     }
 }
