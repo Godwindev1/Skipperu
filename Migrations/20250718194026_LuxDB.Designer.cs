@@ -12,7 +12,7 @@ using Skipperu.Data;
 namespace Skipperu.Migrations
 {
     [DbContext(typeof(UserAuthenticationDBcontext))]
-    [Migration("20250718120851_LuxDB")]
+    [Migration("20250718194026_LuxDB")]
     partial class LuxDB
     {
         /// <inheritdoc />
@@ -378,7 +378,7 @@ namespace Skipperu.Migrations
             modelBuilder.Entity("Skipperu.Data.Requests.Collection", b =>
                 {
                     b.HasOne("Skipperu.Data.Users.data.GlobalUser", "UserNav")
-                        .WithMany("Folders")
+                        .WithMany()
                         .HasForeignKey("GlobalUserID");
 
                     b.Navigation("UserNav");
@@ -411,11 +411,6 @@ namespace Skipperu.Migrations
             modelBuilder.Entity("Skipperu.Data.Requests.Collection", b =>
                 {
                     b.Navigation("SavedRequests");
-                });
-
-            modelBuilder.Entity("Skipperu.Data.Users.data.GlobalUser", b =>
-                {
-                    b.Navigation("Folders");
                 });
 #pragma warning restore 612, 618
         }

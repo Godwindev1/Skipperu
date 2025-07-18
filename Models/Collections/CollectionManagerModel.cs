@@ -37,6 +37,10 @@ namespace Skipperu.Models.Collections
                 .Where(x => x.FolderPath == ParentFolderPath)
                 .FirstOrDefault();
 
+            if(Collection == null)
+            {
+                return new ResultMessage { Message = "Parent FOlder Does Not Exist", type = MessageTypes.NOTFOUND };
+            }
 
             string ParentFolderID = Collection.FolderRootID;
 
@@ -132,34 +136,19 @@ namespace Skipperu.Models.Collections
             return new ResultMessage { Message = "Folder Does not Exist", type = MessageTypes.NOTFOUND };
         }
 
+
         //TODO: template Like Class That Has Return Type As Well As ReturnMessage
         public async Task<IEnumerable<Collection>> GetAllSubFolders(string FolderName, string GlobalUserID, string FolderPath )
         {
             if(await collectionsRepo.DoesFolderExist(GlobalUserID, FolderPath)) {
 
-                string ParentID = (await collectionsRepo
+                var Root = (await collectionsRepo
                     .GetAllByUserAsync(GlobalUserID))
                     .Where(x=> x.FolderPath == FolderPath)
-                    .FirstOrDefault().FolderRootID;
+                    .FirstOrDefault();
 
-                if (ParentID == null)
-                {
-                    var CurrentFolder = (await collectionsRepo.GetAllByUserAsync(GlobalUserID))
-                        .Where(x => x.FolderName == FolderName && x.ParentFolderID == null);
-
-                    var subFolders = await collectionsRepo
-                        .GetAllByParentFolderAsync(CurrentFolder.FirstOrDefault().FolderRootID);
-
-                    return subFolders;
-                }
-                else
-                {
-                    var CurrentFolder = (await collectionsRepo.GetAllByParentFolderAsync(ParentID))
-                        .Where(x => x.FolderName == FolderName);
-
-                    var subFolders = await collectionsRepo.GetAllByParentFolderAsync(CurrentFolder.FirstOrDefault().FolderRootID);
-                    return subFolders;
-                }
+                var subFolders = await collectionsRepo.GetAllByParentFolderAsync(Root.FolderRootID);
+                return subFolders;
             }
 
             return null;

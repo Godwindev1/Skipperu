@@ -72,6 +72,7 @@ namespace Skipperu.Controllers
 
             try {
                 _signinManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
+                
 
                 if (_GlobalUserDBRepo.GetByUserName(SignInInfo.UserName) != null)
                 {

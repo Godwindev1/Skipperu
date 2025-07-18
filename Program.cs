@@ -45,6 +45,14 @@ namespace Skipperu
             builder.Services.AddScoped<IRequestsRepo, RequestsRepo>();
             builder.Services.AddScoped<IGlobalUserRepo, GlobalUserRepo>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30); 
+                options.SlidingExpiration = true;              
+                options.Cookie.HttpOnly = true;                
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
             builder.Services.Configure<SecurityStampValidatorOptions>(options =>
             {
                 options.ValidationInterval = TimeSpan.FromSeconds(30); 

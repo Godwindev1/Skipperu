@@ -26,7 +26,7 @@ namespace Skipperu.Data
             builder.Entity<RequestDBstore>().HasKey(g => g.RequestID);
             builder.Entity<RequestDBstore>().HasOne(g => g.ParentFolder).WithMany(g => g.SavedRequests).HasForeignKey(g => g.ParentFolderID);
             builder.Entity<Collection>().HasKey(g => g.FolderRootID);
-            builder.Entity<Collection>().HasOne(g => g.UserNav).WithMany(g => g.Folders).HasForeignKey(x => x.GlobalUserID);
+            builder.Entity<Collection>().HasOne(g => g.UserNav).WithMany().HasForeignKey(x => x.GlobalUserID);
             builder.Entity<GlobalUser>().HasIndex(x => x.UserName).IsUnique();
 
             base.OnModelCreating(builder);

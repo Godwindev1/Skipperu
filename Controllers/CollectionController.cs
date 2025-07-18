@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Skipperu.Data.Repositories;
+using Skipperu.Data.Requests;
 using Skipperu.Dtos.ErrorHandling;
 using Skipperu.Models.Collections;
 using Skipperu.Repos.Users;
@@ -40,7 +41,7 @@ namespace Skipperu.Controllers
             return new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR };
         }
 
-
+        
      
         [HttpPost("CreateSubFolder")]
 
@@ -103,14 +104,17 @@ namespace Skipperu.Controllers
                 {
                     HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     await HttpContext.Response.WriteAsJsonAsync(new ResultMessage { Message = "Folder Des not Exist", type = MessageTypes.ERROR });
+
+                    return;
                 }
                 else
                 {
-                    HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
                     await HttpContext.Response.WriteAsJsonAsync(result);
+
+                    return ;
                 }
 
-                    return;
             }
 
 
@@ -118,8 +122,39 @@ namespace Skipperu.Controllers
             await HttpContext.Response.WriteAsJsonAsync(new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR });
         }
 
+        [HttpGet("GetRootFolders")]
+        public async Task GetRootFolders()
+        {
+            if (User.Identity != null)
+            {
+                var AspUser = await userManager.FindByNameAsync(User.Identity.Name);
+                var Globaluser = _UsersRepo.GetByUserName(AspUser.NormalizedUserName);
+
+                var result = await collectionManagerModel.GetAllRootFoldersForUser(Globaluser.GlobalUserID);
+
+                if (result == null)
+                {
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    await HttpContext.Response.WriteAsJsonAsync(new ResultMessage { Message = "Folder Des not Exist", type = MessageTypes.ERROR });
+
+                    return;
+                }
+                else
+                {
+                    HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                    await HttpContext.Response.WriteAsJsonAsync(result);
+
+                    return;
+                }
+            }
+        }
+
 
         //TODO: enpoint For Changing Folders Parent 
         //Use Normalized Name FOr FOlders SO Users Cant Create Same Name With Different Case Combinations
+        //Change Error COdes Based ON success or Failure, Currently Errors Return Json with 200k
     }
+
+
+
 }

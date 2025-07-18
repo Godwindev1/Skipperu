@@ -23,7 +23,6 @@ namespace Skipperu.Data.Users.data
         public IdentityUser? AspUser { get; set; }
         public ExternalAuthUser? ExternalAuthUser { get; set; }
 
-        public List<Collection>? Folders { get; set; }
 
         // Optional helper properties
         public bool IsAspIdentityUser => AspFK != null;

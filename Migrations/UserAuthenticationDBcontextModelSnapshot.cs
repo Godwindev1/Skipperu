@@ -375,7 +375,7 @@ namespace Skipperu.Migrations
             modelBuilder.Entity("Skipperu.Data.Requests.Collection", b =>
                 {
                     b.HasOne("Skipperu.Data.Users.data.GlobalUser", "UserNav")
-                        .WithMany("Folders")
+                        .WithMany()
                         .HasForeignKey("GlobalUserID");
 
                     b.Navigation("UserNav");
@@ -408,11 +408,6 @@ namespace Skipperu.Migrations
             modelBuilder.Entity("Skipperu.Data.Requests.Collection", b =>
                 {
                     b.Navigation("SavedRequests");
-                });
-
-            modelBuilder.Entity("Skipperu.Data.Users.data.GlobalUser", b =>
-                {
-                    b.Navigation("Folders");
                 });
 #pragma warning restore 612, 618
         }
