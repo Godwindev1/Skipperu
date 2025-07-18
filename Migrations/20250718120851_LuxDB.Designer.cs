@@ -12,7 +12,7 @@ using Skipperu.Data;
 namespace Skipperu.Migrations
 {
     [DbContext(typeof(UserAuthenticationDBcontext))]
-    [Migration("20250717113740_LuxDB")]
+    [Migration("20250718120851_LuxDB")]
     partial class LuxDB
     {
         /// <inheritdoc />
@@ -230,6 +230,10 @@ namespace Skipperu.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FolderName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FolderPath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

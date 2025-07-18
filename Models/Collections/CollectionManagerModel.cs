@@ -19,7 +19,7 @@ namespace Skipperu.Models.Collections
         {
             try
             {
-                await collectionsRepo.AddAsync(new Data.Requests.Collection { FolderName = FolderName, UserNav = User });
+                await collectionsRepo.AddAsync(new Data.Requests.Collection { FolderName = FolderName, UserNav = User, FolderPath = FolderName });
                 await collectionsRepo.SaveAsync();
                 return new ResultMessage { Message = "Folder Created", type = MessageTypes.SUCCESFUL };
             }
@@ -29,11 +29,20 @@ namespace Skipperu.Models.Collections
             }
 
         }
-        public async Task<ResultMessage> CreateFolder(GlobalUser User, string ParentFolderID, string FolderName)
+        public async Task<ResultMessage> CreateFolder(GlobalUser User, string ParentFolderPath, string FolderName, string FolderPath)
         {
+
+            var Collection = (await collectionsRepo.
+            GetAllByUserAsync(User.GlobalUserID)).Where(x => x.FolderPath == ParentFolderPath).FirstOrDefault();
+
+
+            string ParentFolderID = Collection.FolderRootID;
+
+       
             //TODO: HasParentFolder Property in DB
             var Folder = (await collectionsRepo.GetAllByParentFolderAsync(ParentFolderID))
-                .Where(x => x.FolderName == FolderName && x.GlobalUserID == User.GlobalUserID).FirstOrDefault();
+                .Where(x => x.FolderName == FolderName ).FirstOrDefault();
+
 
             if (Folder == null)
             {
@@ -43,7 +52,7 @@ namespace Skipperu.Models.Collections
                 {
                     await collectionsRepo.AddAsync(
                         new Data.Requests.Collection { 
-                            FolderName = FolderName, ParentFolderID = ParentFolderID, UserNav = ParentCollection.UserNav
+                            FolderName = FolderName, ParentFolderID = ParentFolderID, UserNav = ParentCollection.UserNav, FolderPath = FolderPath
                         }
                     );
 

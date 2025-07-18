@@ -230,6 +230,10 @@ namespace Skipperu.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FolderPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("GlobalUserID")
                         .HasColumnType("nvarchar(450)");
 

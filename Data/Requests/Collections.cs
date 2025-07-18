@@ -10,6 +10,8 @@ namespace Skipperu.Data.Requests
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string FolderRootID { get; set; }
         public string FolderName { get; set; }
+
+        public string FolderPath { get; set; }
         public string? GlobalUserID { get; set; }
 
         public GlobalUser? UserNav { get; set; }

@@ -197,6 +197,7 @@ namespace Skipperu.Migrations
                 {
                     FolderRootID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FolderName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FolderPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GlobalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ParentFolderID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },

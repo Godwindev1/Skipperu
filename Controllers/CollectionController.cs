@@ -40,30 +40,17 @@ namespace Skipperu.Controllers
         }
 
 
-        //TODO: Proper DSA For Representing Parent Heirachy
-        //Proper Heirachal Search And Creation
+     
         [HttpPost("CreateSubFolder")]
 
-        public async Task<ActionResult<ResultMessage>> CreateFolder (string FolderName, string ParentName)
+        public async Task<ActionResult<ResultMessage>> CreateFolder (string FolderName, string ParentHeirachyPath, string HeirachyPath)
         {
             if (User.Identity != null)
             {
                 var AspUser = await userManager.FindByNameAsync(User.Identity.Name);
                 var GLobaluser = _UsersRepo.GetByUserName(AspUser.NormalizedUserName);
 
-                var Collection = (await _collectionsRepo.
-                    GetAllByUserAsync(GLobaluser.GlobalUserID)).Where(x => x.FolderName == ParentName).FirstOrDefault();
-
-                //TODO: Example situation, Rootfolder->DefaultFolder->Subfolder exists
-                //and RootFolder->DefaultFolder2->Subfolder exists 
-                //if Create Folder where ParentName=SubFolder And FOlderName=Any 
-                //Both Of the Described FOlders Above Meet these Description And Since First Or default is Used It Always Adds
-                //it To The First in the List 
-
-                //Possible FIX Is Tracking the Hierachy Down To the Root To Make Sure THeres always A Distinction
-
-
-                return await collectionManagerModel.CreateFolder(GLobaluser, Collection.FolderRootID, FolderName);
+                return await collectionManagerModel.CreateFolder(GLobaluser, ParentHeirachyPath, FolderName, HeirachyPath);
             }
 
             return new ResultMessage { Message = "User Is Not Signed in", type = MessageTypes.ERROR };
