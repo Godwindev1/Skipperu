@@ -7,7 +7,7 @@ namespace Skipperu.Models.Requests.client.proxy
 {
     public partial class RequestClientProxyModel
     {
-        public RestRequest GetRequest(RequestInfo RequestContext, Method Method)
+        public RestRequest GetRequest(RequestCallInfo RequestContext, Method Method)
         {
 
             RestRequest Request = new RestRequest(RequestContext.Endpoint, Method);

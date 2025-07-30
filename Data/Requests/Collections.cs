@@ -9,11 +9,12 @@ namespace Skipperu.Data.Requests
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string FolderRootID { get; set; }
-        public string FolderName { get; set; }
+        public string FolderNameNormalized { get; set; }
 
-        public string FolderPath { get; set; }
+        public string FolderPathNormalized { get; set; }
         public string? GlobalUserID { get; set; }
 
+        [NotMapped]
         public GlobalUser? UserNav { get; set; }
         public string? ParentFolderID { get; set; } //TODO: Change to CollectionParentFolderID
 

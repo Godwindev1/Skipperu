@@ -15,11 +15,11 @@ namespace Skipperu.Models.Collections
             collectionsRepo = (CollectionsRepo)Repo;
         }
 
-        public async Task<ResultMessage> CreateRootFolder(GlobalUser User, string FolderName)
+        public async Task<ResultMessage> CreateRootFolder(GlobalUser User, string FolderNameNormalized)
         {
             try
             {
-                await collectionsRepo.AddAsync(new Data.Requests.Collection { FolderName = FolderName, UserNav = User, FolderPath = FolderName });
+                await collectionsRepo.AddAsync(new Collection { FolderNameNormalized = FolderNameNormalized, GlobalUserID = User.GlobalUserID, FolderPathNormalized = FolderNameNormalized });
                 await collectionsRepo.SaveAsync();
                 return new ResultMessage { Message = "Folder Created", type = MessageTypes.SUCCESFUL };
             }
@@ -29,12 +29,12 @@ namespace Skipperu.Models.Collections
             }
 
         }
-        public async Task<ResultMessage> CreateFolder(GlobalUser User, string ParentFolderPath, string FolderName, string FolderPath)
+        public async Task<ResultMessage> CreateFolder(GlobalUser User, string ParentFolderPath, string FolderNameNormalized, string FolderPathNormalized)
         {
 
             var Collection = (await collectionsRepo
                 .GetAllByUserAsync(User.GlobalUserID))
-                .Where(x => x.FolderPath == ParentFolderPath)
+                .Where(x => x.FolderPathNormalized == ParentFolderPath)
                 .FirstOrDefault();
 
             if(Collection == null)
@@ -47,7 +47,7 @@ namespace Skipperu.Models.Collections
        
             //TODO: HasParentFolder Property in DB
             var Folder = (await collectionsRepo.GetAllByParentFolderAsync(ParentFolderID))
-                .Where(x => x.FolderName == FolderName )
+                .Where(x => x.FolderNameNormalized == FolderNameNormalized )
                 .FirstOrDefault();
 
 
@@ -59,7 +59,7 @@ namespace Skipperu.Models.Collections
                 {
                     await collectionsRepo.AddAsync(
                         new Data.Requests.Collection { 
-                            FolderName = FolderName, ParentFolderID = ParentFolderID, UserNav = ParentCollection.UserNav, FolderPath = FolderPath
+                            FolderNameNormalized = FolderNameNormalized, ParentFolderID = ParentFolderID, UserNav = ParentCollection.UserNav, FolderPathNormalized = FolderPathNormalized
                         }
                     );
 
@@ -84,7 +84,7 @@ namespace Skipperu.Models.Collections
         
         private async Task DeleteChildren(string ParentFolderID)
         {
-            var ParentFolderItems = (await collectionsRepo.GetAllByParentFolderAsync(ParentFolderID));
+            var ParentFolderItems = await collectionsRepo.GetAllByParentFolderAsync(ParentFolderID);
 
             if(!ParentFolderItems.Any())
             {
@@ -100,10 +100,10 @@ namespace Skipperu.Models.Collections
             }
         }
         
-        public async Task<ResultMessage> DeleteFolder(string UserID, string FolderPath)
+        public async Task<ResultMessage> DeleteFolder(string UserID, string FolderPathNormalized)
         {
             var Folder =  (await collectionsRepo.GetAllByUserAsync(UserID))
-                .Where(x => x.FolderPath == FolderPath)
+                .Where(x => x.FolderPathNormalized == FolderPathNormalized)
                 .FirstOrDefault();
             
             if(Folder != null)
@@ -118,15 +118,15 @@ namespace Skipperu.Models.Collections
             return new ResultMessage { Message = "Folder Does not Exist", type = MessageTypes.NOTFOUND };
         }
 
-        public async Task<ResultMessage> ChangeFolderName(string UserID, string NewFolderName, string FolderPath, string newFolderPath)
+        public async Task<ResultMessage> ChangeFolderName(string UserID, string NewFolderName, string FolderPathNormalized, string newFolderPath)
         {
             var Folder = (await collectionsRepo.GetAllByUserAsync(UserID))
-                .Where(x => x.FolderPath == FolderPath).FirstOrDefault();
+                .Where(x => x.FolderPathNormalized == FolderPathNormalized).FirstOrDefault();
 
             if (Folder != null)
             {
-                Folder.FolderPath = newFolderPath;
-                Folder.FolderName = NewFolderName;
+                Folder.FolderPathNormalized = newFolderPath;
+                Folder.FolderNameNormalized = NewFolderName;
                 await collectionsRepo.UpdateAsync(Folder);
                 await collectionsRepo.SaveAsync();
 
@@ -138,13 +138,13 @@ namespace Skipperu.Models.Collections
 
 
         //TODO: template Like Class That Has Return Type As Well As ReturnMessage
-        public async Task<IEnumerable<Collection>> GetAllSubFolders(string FolderName, string GlobalUserID, string FolderPath )
+        public async Task<IEnumerable<Collection>> GetAllSubFolders(string FolderNameNormalized, string GlobalUserID, string FolderPathNormalized )
         {
-            if(await collectionsRepo.DoesFolderExist(GlobalUserID, FolderPath)) {
+            if(await collectionsRepo.DoesFolderExist(GlobalUserID, FolderPathNormalized)) {
 
                 var Root = (await collectionsRepo
                     .GetAllByUserAsync(GlobalUserID))
-                    .Where(x=> x.FolderPath == FolderPath)
+                    .Where(x=> x.FolderPathNormalized == FolderPathNormalized)
                     .FirstOrDefault();
 
                 var subFolders = await collectionsRepo.GetAllByParentFolderAsync(Root.FolderRootID);

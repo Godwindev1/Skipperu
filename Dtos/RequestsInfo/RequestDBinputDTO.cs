@@ -13,5 +13,7 @@ namespace Skipperu.Dtos.RequestsInfo
         public string? UserHeaderKVP { get; set; }
 
         public string? UserBodyKVP { get; set; }
+
+        public string RequestName { get; set;  }
     }
 }

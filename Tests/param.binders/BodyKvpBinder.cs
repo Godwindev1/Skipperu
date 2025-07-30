@@ -17,7 +17,7 @@ namespace Skipperu.Tests.param.binders
         {
             if(context.HttpContext.Request.HasFormContentType || context.HttpContext.Request.HasJsonContentType())
             {
-                RequestInfo ParsedInfo = new();
+                RequestCallInfo ParsedInfo = new();
                 KvpList? SkipperuRequestHandlerBodyData = new KvpList();
 
                 if (context.HttpContext.Request.HasFormContentType)

@@ -16,7 +16,8 @@ namespace Skipperu.MappingProfile
             .ForMember(x => x.HeaderJSON, options => options.MapFrom(x => x.UserHeaderKVP))
             .ForMember(x => x.BodyJSON, options => options.MapFrom(x => x.UserBodyKVP))
             .ForMember(x => x.Endpoint, options => options.MapFrom(x => x.UserEndpoint))
-            .ForMember(x => x.QueryParametersJSON, options => options.MapFrom(x => x.UserQueryKVP));
+            .ForMember(x => x.QueryParametersJSON, options => options.MapFrom(x => x.UserQueryKVP))
+            .ForMember(x => x.RequestName, options => options.MapFrom(x => x.RequestName));
         }
     }
 }

@@ -196,8 +196,8 @@ namespace Skipperu.Migrations
                 columns: table => new
                 {
                     FolderRootID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FolderName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FolderPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FolderNameNormalized = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FolderPathNormalized = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GlobalUserID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ParentFolderID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -215,14 +215,14 @@ namespace Skipperu.Migrations
                 name: "requests",
                 columns: table => new
                 {
-                    RequestID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RequestID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Host = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Endpoint = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     QueryParametersJSON = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HeaderJSON = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BodyJSON = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ParentFolderID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ParentFolderID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    RequestName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

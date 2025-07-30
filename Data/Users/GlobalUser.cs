@@ -14,17 +14,14 @@ namespace Skipperu.Data.Users.data
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string GlobalUserID { get; set; }
-        public string? AspFK { get; set; }     // Assume Identity uses string keys
+        public string? AspFK { get; set; }     
         public string? ExternalAuthFK { get; set; }
 
         public string UserName { get; set; }
 
-        // Navigation
         public IdentityUser? AspUser { get; set; }
         public ExternalAuthUser? ExternalAuthUser { get; set; }
 
-
-        // Optional helper properties
         public bool IsAspIdentityUser => AspFK != null;
         public bool IsExternalAuthUser => ExternalAuthFK != null;
 

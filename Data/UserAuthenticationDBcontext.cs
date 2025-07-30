@@ -19,15 +19,20 @@ namespace Skipperu.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //This Relationship Causes Issues when Creating Root Folders
             builder.Entity<GlobalUser>().HasOne(g => g.AspUser).WithMany().HasForeignKey(g => g.AspFK);
             builder.Entity<GlobalUser>().HasOne(g => g.ExternalAuthUser).WithMany().HasForeignKey(g => g.ExternalAuthFK);
             builder.Entity<GlobalUser>().HasKey(g => g.GlobalUserID);
             builder.Entity<ExternalAuthUser>().HasKey(g => g.PrimaryKey);
             builder.Entity<RequestDBstore>().HasKey(g => g.RequestID);
-            builder.Entity<RequestDBstore>().HasOne(g => g.ParentFolder).WithMany(g => g.SavedRequests).HasForeignKey(g => g.ParentFolderID);
             builder.Entity<Collection>().HasKey(g => g.FolderRootID);
             builder.Entity<Collection>().HasOne(g => g.UserNav).WithMany().HasForeignKey(x => x.GlobalUserID);
             builder.Entity<GlobalUser>().HasIndex(x => x.UserName).IsUnique();
+
+            builder.Entity<Collection>()
+                .HasMany(property => property.SavedRequests)
+                .WithOne()
+                .HasForeignKey(x => x.ParentFolderID);
 
             base.OnModelCreating(builder);
         }

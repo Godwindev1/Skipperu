@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Skipperu.Data;
 using Skipperu.Data.Users.data;
@@ -17,12 +18,14 @@ namespace Skipperu.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signinManager;
         private readonly GlobalUserRepo _GlobalUserDBRepo;
-        public AspIdentityAccountController (UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, 
-            IGlobalUserRepo UsersRepo)
+        private readonly IMemoryCache memoryCache;
+        public AspIdentityAccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+            IGlobalUserRepo UsersRepo, IMemoryCache cache)
         {
             _GlobalUserDBRepo = (GlobalUserRepo)UsersRepo;
             _signinManager = signInManager;
             _userManager = userManager;
+            memoryCache = cache;
         }
 
         [HttpPost("Register")]
@@ -72,16 +75,18 @@ namespace Skipperu.Controllers
 
             try {
                 _signinManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
-                
 
-                if (_GlobalUserDBRepo.GetByUserName(SignInInfo.UserName) != null)
+                var GlobalUser = _GlobalUserDBRepo.GetByUserName(SignInInfo.UserName);
+
+                if (GlobalUser != null)
                 {
                     var AspIdentityUser = await _userManager.FindByNameAsync(SignInInfo.UserName);
                     var signInResult = await _signinManager.PasswordSignInAsync(AspIdentityUser, SignInInfo.UserPassword, true, false);
 
                     if (signInResult.Succeeded)
                     {
-                        return JsonConvert.SerializeObject(new ResultMessage { Message = " Successful Sign in ", type = MessageTypes.SUCCESFUL } );
+                        memoryCache.Set(AspIdentityUser.UserName, GlobalUser);
+                        return JsonConvert.SerializeObject(new ResultMessage { Message = " Successful Sign in ", type = MessageTypes.SUCCESFUL });
                     }
                 }
                 else
@@ -105,7 +110,9 @@ namespace Skipperu.Controllers
             string? ExceptionMessager = "";
             try
             {
-                if (_GlobalUserDBRepo.GetByUserName(SignInInfo.UserName) != null)
+                var GlobalUser = _GlobalUserDBRepo.GetByUserName(SignInInfo.UserName);
+
+                if (GlobalUser != null)
                 {
                     var AspIdentityUser = await _userManager.FindByNameAsync(SignInInfo.UserName);
                     await _userManager.AddClaimsAsync(AspIdentityUser, GroupClaims.RoleSuperAdmin.Value);
@@ -114,6 +121,7 @@ namespace Skipperu.Controllers
 
                     if (signInResult.Succeeded)
                     {
+                        memoryCache.Set(AspIdentityUser.UserName, GlobalUser);
                         return JsonConvert.SerializeObject(new ResultMessage { Message = " Successful Sign in ", type = MessageTypes.SUCCESFUL });
                     }
                 }
@@ -147,7 +155,6 @@ namespace Skipperu.Controllers
         [HttpPost("ApplyCode")]
         public async Task ApplyConfirmationCode()
         {
-
         }
     }
 }

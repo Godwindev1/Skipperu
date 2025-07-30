@@ -42,44 +42,44 @@ namespace Skipperu.Tests
         }
 
         [HttpGet("get")]
-        public async Task<ActionResult<string>> TestGetRequest([ModelBinder(binderType: typeof(RequestInfoBinder))]RequestInfo requestContxt)
+        public async Task<ActionResult<string>> TestGetRequest([ModelBinder(binderType: typeof(RequestInfoBinder))]RequestCallInfo requestContxt)
         {
            return await Model.ForwardRequest(requestContxt, RestSharp.Method.Get);
         }
 
         [HttpPost("post")]
-        public async Task<ActionResult<string>> TestPostRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestInfo requestContxt)
+        public async Task<ActionResult<string>> TestPostRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestCallInfo requestContxt)
         {
             return await Model.ForwardRequest(requestContxt, RestSharp.Method.Post);
         }
 
         [HttpPut("put")]
-        public async Task<ActionResult<string>> TestPutRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestInfo requestContxt)
+        public async Task<ActionResult<string>> TestPutRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestCallInfo requestContxt)
         {
             return await Model.ForwardRequest(requestContxt, RestSharp.Method.Put);
         }
 
         [HttpPatch("patch")]
-        public async Task<ActionResult<string>> TestPatchRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestInfo requestContxt)
+        public async Task<ActionResult<string>> TestPatchRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestCallInfo requestContxt)
         {
             return await Model.ForwardRequest(requestContxt, RestSharp.Method.Patch);
         }
 
         [Authorize(policy: "IsUser")]
         [HttpOptions("options")]
-        public async Task<ActionResult<string>> TestoptionsRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestInfo requestContxt)
+        public async Task<ActionResult<string>> TestoptionsRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestCallInfo requestContxt)
         {
             return await Model.ForwardRequest(requestContxt, RestSharp.Method.Options);
         }
 
         [HttpHead("head")]
-        public async Task<ActionResult<string>> TestHeadRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestInfo requestContxt)
+        public async Task<ActionResult<string>> TestHeadRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestCallInfo requestContxt)
         {
             return await Model.ForwardRequest(requestContxt, RestSharp.Method.Head);
         }
 
         [HttpDelete("delete")]
-        public async Task<ActionResult<string>> TestDeleteRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestInfo requestContxt)
+        public async Task<ActionResult<string>> TestDeleteRequest([ModelBinder(binderType: typeof(RequestInfoBinder))] RequestCallInfo requestContxt)
         {
             return await Model.ForwardRequest(requestContxt, RestSharp.Method.Delete);
         }

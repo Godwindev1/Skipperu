@@ -23,10 +23,13 @@ namespace Skipperu
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper((action => action.AddProfile(typeof(AutomapperProfile))));
+            builder.Services.AddMemoryCache();
             builder.Services.AddDbContext<UserAuthenticationDBcontext>( options =>
             {
                 //options.UseLazyLoadingProxies();
+                options.EnableSensitiveDataLogging();
                 options.UseSqlServer("Server=localhost,1436;Database=LuxDB;User Id=sa;Password=TestServerDefault1@1#$&;TrustServerCertificate=True;");
+                //options.UseInMemoryDatabase("LuxDB");
             }
             );
             builder.Services.AddAuthentication();

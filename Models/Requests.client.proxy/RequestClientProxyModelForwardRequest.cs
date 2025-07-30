@@ -13,7 +13,7 @@ namespace Skipperu.Models.Requests.client.proxy
         {   
         }
 
-        public async Task<ActionResult<string>> ForwardRequest(RequestInfo RequestContext, Method HttpVerb)
+        public async Task<ActionResult<string>> ForwardRequest(RequestCallInfo RequestContext, Method HttpVerb)
         {
 
             try {
@@ -49,4 +49,6 @@ namespace Skipperu.Models.Requests.client.proxy
         }
 
     }
+
+    //TODO: Matching version Of this Class Will Exist On the Frontend To Allow Using the Users System A Forwarder For Calling Requests
 }

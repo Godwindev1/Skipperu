@@ -7,7 +7,7 @@ using Skipperu.Tests.param.binders;
 namespace Skipperu.Dtos.RequestsInfo
 {
     [ModelBinder(binderType: typeof(RequestInfoBinder))]
-    public class RequestInfo
+    public class RequestCallInfo
     {
         [Required]
         public string Host { get; set; }

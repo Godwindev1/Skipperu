@@ -17,10 +17,9 @@ namespace Skipperu.Data.Repositories
             await _context.requests.AddAsync(request);
         }
 
-        public async Task<RequestDBstore?> GetByIdAsync(int id)
+        public async Task<RequestDBstore?> GetByIdAsync(string id)
         {
             return await _context.requests
-                .Include(r => r.ParentFolder)
                 .FirstOrDefaultAsync(r => r.RequestID == id);
         }
 
@@ -31,13 +30,7 @@ namespace Skipperu.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<RequestDBstore>> GetAllByUserAsync(string globalUserId)
-        {
-            return await _context.requests
-                .Include(r => r.ParentFolder)
-                .Where(r => r.ParentFolder.GlobalUserID == globalUserId.ToString())
-                .ToListAsync();
-        }
+ 
 
         public Task UpdateAsync(RequestDBstore request)
         {

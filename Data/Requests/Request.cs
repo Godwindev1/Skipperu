@@ -7,7 +7,7 @@ namespace Skipperu.Data.Requests
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RequestID { get; set; }
+        public string RequestID { get; set; }
         [Required]
         public string Host { get; set; }
         [Required]
@@ -20,6 +20,7 @@ namespace Skipperu.Data.Requests
         public string ? BodyJSON { get; set; }
         public string ? ParentFolderID { get; set; }
 
-        public Collection ParentFolder { get; set; }
+        public string RequestName { get; set; }
+
     }
 }

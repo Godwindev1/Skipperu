@@ -226,11 +226,11 @@ namespace Skipperu.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("FolderName")
+                    b.Property<string>("FolderNameNormalized")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FolderPath")
+                    b.Property<string>("FolderPathNormalized")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -249,11 +249,9 @@ namespace Skipperu.Migrations
 
             modelBuilder.Entity("Skipperu.Data.Requests.RequestDBstore", b =>
                 {
-                    b.Property<int>("RequestID")
+                    b.Property<string>("RequestID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestID"));
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("BodyJSON")
                         .HasColumnType("nvarchar(max)");
@@ -273,6 +271,10 @@ namespace Skipperu.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("QueryParametersJSON")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RequestID");
@@ -383,11 +385,9 @@ namespace Skipperu.Migrations
 
             modelBuilder.Entity("Skipperu.Data.Requests.RequestDBstore", b =>
                 {
-                    b.HasOne("Skipperu.Data.Requests.Collection", "ParentFolder")
+                    b.HasOne("Skipperu.Data.Requests.Collection", null)
                         .WithMany("SavedRequests")
                         .HasForeignKey("ParentFolderID");
-
-                    b.Navigation("ParentFolder");
                 });
 
             modelBuilder.Entity("Skipperu.Data.Users.data.GlobalUser", b =>
