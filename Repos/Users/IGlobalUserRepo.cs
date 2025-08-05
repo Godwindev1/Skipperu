@@ -7,7 +7,7 @@ namespace Skipperu.Repos.Users
     {
         Task AddAsync(GlobalUser User);
 
-        GlobalUser? GetByUserName(string name);
+        GlobalUser? GetByNormalizedUserEMail(string NormalizedUserEmail);
 
         Task UpdateAsync(GlobalUser User);
 

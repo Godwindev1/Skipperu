@@ -12,7 +12,7 @@ using Skipperu.Data;
 namespace Skipperu.Migrations
 {
     [DbContext(typeof(UserAuthenticationDBcontext))]
-    [Migration("20250730151915_LuxDB")]
+    [Migration("20250805115650_LuxDB")]
     partial class LuxDB
     {
         /// <inheritdoc />
@@ -287,15 +287,31 @@ namespace Skipperu.Migrations
                     b.ToTable("requests");
                 });
 
-            modelBuilder.Entity("Skipperu.Data.Users.data.ExternalAuth.data.ExternalAuthUser", b =>
+            modelBuilder.Entity("Skipperu.Data.Users.data.ExternalAuth.data.GoogleUser", b =>
                 {
-                    b.Property<string>("PrimaryKey")
+                    b.Property<string>("GoogleIdentityKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("PrimaryKey");
+                    b.Property<string>("NormalizedEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("ExternalAuthUsers");
+                    b.Property<string>("NormalizedUserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GoogleIdentityKey");
+
+                    b.ToTable("GoogleUsers");
                 });
 
             modelBuilder.Entity("Skipperu.Data.Users.data.GlobalUser", b =>
@@ -307,10 +323,10 @@ namespace Skipperu.Migrations
                     b.Property<string>("AspFK")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ExternalAuthFK")
+                    b.Property<string>("GoogleAuthFK")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("NormalizedUserEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -318,9 +334,9 @@ namespace Skipperu.Migrations
 
                     b.HasIndex("AspFK");
 
-                    b.HasIndex("ExternalAuthFK");
+                    b.HasIndex("GoogleAuthFK");
 
-                    b.HasIndex("UserName")
+                    b.HasIndex("NormalizedUserEmail")
                         .IsUnique();
 
                     b.ToTable("GlobalUsers");
@@ -399,13 +415,13 @@ namespace Skipperu.Migrations
                         .WithMany()
                         .HasForeignKey("AspFK");
 
-                    b.HasOne("Skipperu.Data.Users.data.ExternalAuth.data.ExternalAuthUser", "ExternalAuthUser")
+                    b.HasOne("Skipperu.Data.Users.data.ExternalAuth.data.GoogleUser", "GoogleAuth")
                         .WithMany()
-                        .HasForeignKey("ExternalAuthFK");
+                        .HasForeignKey("GoogleAuthFK");
 
                     b.Navigation("AspUser");
 
-                    b.Navigation("ExternalAuthUser");
+                    b.Navigation("GoogleAuth");
                 });
 
             modelBuilder.Entity("Skipperu.Data.Requests.Collection", b =>

@@ -34,7 +34,7 @@ namespace Skipperu.Tests
             _CollectionRepository = (CollectionsRepo)CollectionRepo;
 
             Model = new RequestClientProxyModel();
-            GlobalUser TestAdmin = new GlobalUser { ExternalAuthUser = new ExternalAuthUser { } };
+            GlobalUser TestAdmin = new GlobalUser { GoogleAuth = new GoogleUser { } };
 
             string sql = $"SELECT * FROM GlobalUsers WHERE ExternalAuthFK = 'ec5f7376-179f-42ae-bb7f-ebef9257cee3' ";
 

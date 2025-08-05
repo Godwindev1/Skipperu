@@ -21,13 +21,13 @@ namespace Skipperu.Data
         {
             //This Relationship Causes Issues when Creating Root Folders
             builder.Entity<GlobalUser>().HasOne(g => g.AspUser).WithMany().HasForeignKey(g => g.AspFK);
-            builder.Entity<GlobalUser>().HasOne(g => g.ExternalAuthUser).WithMany().HasForeignKey(g => g.ExternalAuthFK);
+            builder.Entity<GlobalUser>().HasOne(g => g.GoogleAuth).WithMany().HasForeignKey(g => g.GoogleAuthFK);
             builder.Entity<GlobalUser>().HasKey(g => g.GlobalUserID);
-            builder.Entity<ExternalAuthUser>().HasKey(g => g.PrimaryKey);
+            builder.Entity<GoogleUser>().HasKey(g => g.GoogleIdentityKey);
             builder.Entity<RequestDBstore>().HasKey(g => g.RequestID);
             builder.Entity<Collection>().HasKey(g => g.FolderRootID);
             builder.Entity<Collection>().HasOne(g => g.UserNav).WithMany().HasForeignKey(x => x.GlobalUserID);
-            builder.Entity<GlobalUser>().HasIndex(x => x.UserName).IsUnique();
+            builder.Entity<GlobalUser>().HasIndex(x => x.NormalizedUserEmail).IsUnique();
 
             builder.Entity<Collection>()
                 .HasMany(property => property.SavedRequests)
@@ -38,7 +38,7 @@ namespace Skipperu.Data
         }
 
         public DbSet<GlobalUser> GlobalUsers { get; set; }
-        public DbSet<ExternalAuthUser> ExternalAuthUsers { get; set; }
+        public DbSet<GoogleUser> GoogleUsers { get; set; }
         public DbSet<RequestDBstore> requests { get; set;  }
         public DbSet<Collection> GlobalRequestCollection { get; set; }
     }

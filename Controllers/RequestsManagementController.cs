@@ -136,6 +136,33 @@ namespace Skipperu.Controllers
             };
         }
 
+        [HttpPost("ChangeRequestName")]
+        public async Task<ResultMessage> ChangeRequestName(string folderPath, string RequestName, string newname)
+        {
+            if (User.Identity != null)
+            {
+                var GlobalUser = memoryCache
+                                    .Get<GlobalUser>(User.Identity.Name);
+
+                if (GlobalUser != null)
+                {
+                   return await  ManagerModel.ChangeRequestName(RequestName, newname, folderPath, GlobalUser.GlobalUserID);
+                }
+
+                return new ResultMessage
+                {
+                    Message = "Backend Error Retrieving Cached User",
+                    type = MessageTypes.ERROR
+                };
+            }
+
+            return new ResultMessage
+            {
+                Message = "User Is Not Signed in",
+                type = MessageTypes.ERROR
+            };
+        }
+
 
     };
 

@@ -1,28 +1,36 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Skipperu.Data;
 using Skipperu.Data.Users.data;
+using Skipperu.Data.Users.data.ExternalAuth.data;
 using Skipperu.Dtos.ErrorHandling;
 using Skipperu.Dtos.Users;
 using Skipperu.Models.Accounts;
 using Skipperu.Repos.Users;
-namespace Skipperu.Controllers
+using System.Security.Claims;
+namespace Skipperu.Controllers.AccountControllers
 {
     [ApiController]
     [Route("Accounts")]
-    public class AspIdentityAccountController : Controller
+    public partial class AspIdentityAccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signinManager;
         private readonly GlobalUserRepo _GlobalUserDBRepo;
+        private readonly GoogleUserRepo _GoogleUserRepo;
         private readonly IMemoryCache memoryCache;
-        public AspIdentityAccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
-            IGlobalUserRepo UsersRepo, IMemoryCache cache)
+        public AspIdentityAccountController(
+            UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager,
+            IGlobalUserRepo UsersRepo, IMemoryCache cache,
+            IGoogleUserRepo GooglUserRepoI   
+        )
         {
             _GlobalUserDBRepo = (GlobalUserRepo)UsersRepo;
+            _GoogleUserRepo = (GoogleUserRepo)GooglUserRepoI;
             _signinManager = signInManager;
             _userManager = userManager;
             memoryCache = cache;
@@ -35,6 +43,7 @@ namespace Skipperu.Controllers
 
             if(await _userManager.FindByNameAsync(RegisterInformation.UserName) == null)
             {
+
                 var result = await _userManager.CreateAsync(User,
                 RegisterInformation.UserPassword);
 
@@ -42,7 +51,7 @@ namespace Skipperu.Controllers
                 {
                     var AspIdentityUser = await _userManager.FindByNameAsync(RegisterInformation.UserName);
 
-                    await _GlobalUserDBRepo.AddAsync(new GlobalUser { AspUser = AspIdentityUser, UserName = AspIdentityUser.NormalizedUserName });
+                    await _GlobalUserDBRepo.AddAsync(new GlobalUser { AspUser = AspIdentityUser, NormalizedUserEmail = AspIdentityUser.NormalizedEmail });
                     await _GlobalUserDBRepo.SaveAsync();
 
                     await _userManager.AddClaimsAsync(User, GroupClaims.RoleUser.Value);
@@ -76,7 +85,7 @@ namespace Skipperu.Controllers
             try {
                 _signinManager.AuthenticationScheme = IdentityConstants.ApplicationScheme;
 
-                var GlobalUser = _GlobalUserDBRepo.GetByUserName(SignInInfo.UserName);
+                var GlobalUser = _GlobalUserDBRepo.GetByNormalizedUserEMail(SignInInfo.UserEmail.ToUpperInvariant());
 
                 if (GlobalUser != null)
                 {
@@ -86,7 +95,7 @@ namespace Skipperu.Controllers
                     if (signInResult.Succeeded)
                     {
                         memoryCache.Set(AspIdentityUser.UserName, GlobalUser);
-                        return JsonConvert.SerializeObject(new ResultMessage { Message = " Successful Sign in ", type = MessageTypes.SUCCESFUL });
+                        return JsonConvert.SerializeObject(new ResultMessage { Message = " Successful Sign in ", type = MessageTypes.AUTHENTICATED });
                     }
                 }
                 else
@@ -110,7 +119,7 @@ namespace Skipperu.Controllers
             string? ExceptionMessager = "";
             try
             {
-                var GlobalUser = _GlobalUserDBRepo.GetByUserName(SignInInfo.UserName);
+                var GlobalUser = _GlobalUserDBRepo.GetByNormalizedUserEMail(SignInInfo.UserName.ToUpperInvariant());
 
                 if (GlobalUser != null)
                 {
@@ -122,7 +131,7 @@ namespace Skipperu.Controllers
                     if (signInResult.Succeeded)
                     {
                         memoryCache.Set(AspIdentityUser.UserName, GlobalUser);
-                        return JsonConvert.SerializeObject(new ResultMessage { Message = " Successful Sign in ", type = MessageTypes.SUCCESFUL });
+                        return JsonConvert.SerializeObject(new ResultMessage { Message = " Successful Sign in ", type = MessageTypes.AUTHENTICATED });
                     }
                 }
                 else
@@ -137,24 +146,6 @@ namespace Skipperu.Controllers
 
             return JsonConvert.SerializeObject(new ResultMessage { Message = ExceptionMessager, type = MessageTypes.INFO });
 
-        }
-
-
-        //TODO: CONFIRMATION EMAIL 
-        [HttpPost("GetConfirmationCode")]
-        public async Task RequestConfirmationCode([FromForm] UserDataDto SignInInfo)
-        {
-
-            if (_GlobalUserDBRepo.GetByUserName(SignInInfo.UserName) != null)
-            {
-                var AspIdentityUser = await _userManager.FindByEmailAsync(SignInInfo.UserName);
-                await _userManager.GenerateEmailConfirmationTokenAsync(AspIdentityUser);
-            }
-        }
-
-        [HttpPost("ApplyCode")]
-        public async Task ApplyConfirmationCode()
-        {
         }
     }
 }

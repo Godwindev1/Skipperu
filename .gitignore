@@ -25,3 +25,6 @@ Properties/launchSettings.json
 
 ## Logs
 *.log
+
+##env
+.env

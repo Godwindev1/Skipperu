@@ -51,14 +51,18 @@ namespace Skipperu.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExternalAuthUsers",
+                name: "GoogleUsers",
                 columns: table => new
                 {
-                    PrimaryKey = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    GoogleIdentityKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExternalAuthUsers", x => x.PrimaryKey);
+                    table.PrimaryKey("PK_GoogleUsers", x => x.GoogleIdentityKey);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,8 +177,8 @@ namespace Skipperu.Migrations
                 {
                     GlobalUserID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AspFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ExternalAuthFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    GoogleAuthFK = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    NormalizedUserEmail = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,10 +189,10 @@ namespace Skipperu.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_GlobalUsers_ExternalAuthUsers_ExternalAuthFK",
-                        column: x => x.ExternalAuthFK,
-                        principalTable: "ExternalAuthUsers",
-                        principalColumn: "PrimaryKey");
+                        name: "FK_GlobalUsers_GoogleUsers_GoogleAuthFK",
+                        column: x => x.GoogleAuthFK,
+                        principalTable: "GoogleUsers",
+                        principalColumn: "GoogleIdentityKey");
                 });
 
             migrationBuilder.CreateTable(
@@ -284,14 +288,14 @@ namespace Skipperu.Migrations
                 column: "AspFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GlobalUsers_ExternalAuthFK",
+                name: "IX_GlobalUsers_GoogleAuthFK",
                 table: "GlobalUsers",
-                column: "ExternalAuthFK");
+                column: "GoogleAuthFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GlobalUsers_UserName",
+                name: "IX_GlobalUsers_NormalizedUserEmail",
                 table: "GlobalUsers",
-                column: "UserName",
+                column: "NormalizedUserEmail",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -334,7 +338,7 @@ namespace Skipperu.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "ExternalAuthUsers");
+                name: "GoogleUsers");
         }
     }
 }

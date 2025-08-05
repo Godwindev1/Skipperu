@@ -6,7 +6,8 @@
         INFO = 2,
         SUCCESFUL = 3,
         NOTFOUND = 4,
-        WARNING = 5
+        WARNING = 5,
+        AUTHENTICATED = 6
     }
     public class ResultMessage
     {

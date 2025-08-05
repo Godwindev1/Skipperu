@@ -78,8 +78,20 @@ namespace Skipperu.Models.Requests
             return new ResultMessage { Message = "successful", type = MessageTypes.SUCCESFUL };
         }
 
-        public async Task<ResultMessage> ChangeRequestName(RequestDBstore Request)
+        public async Task<ResultMessage> ChangeRequestName(string RequestName, string NewName, string FolderPath, string GlobalUserID)
         {
+            string folderpathNormalized = FolderPath.ToUpperInvariant();
+            var UserCollections = (await _collectionsRepo.GetAllByUserAsync(GlobalUserID));
+            
+            var SpecifiedFolder = UserCollections
+                .Where(x => x.FolderPathNormalized.Equals(folderpathNormalized))
+                .ToList().FirstOrDefault();
+
+            var Request = (await _repo.GetAllByFolderAsync(SpecifiedFolder.FolderRootID))
+                .Where(x => x.RequestName == RequestName).ToList().FirstOrDefault();
+
+            Request.RequestName = NewName;
+
             if(Request == null)
             {
                 return new ResultMessage { Message = "Request Input Is Null Application Error", type = MessageTypes.ERROR };

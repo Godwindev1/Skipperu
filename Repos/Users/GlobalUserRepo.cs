@@ -14,23 +14,26 @@ namespace Skipperu.Repos.Users
 
         public async Task AddAsync(GlobalUser User)
         {
+            User.NormalizedUserEmail =  User.NormalizedUserEmail.ToUpperInvariant();
             await _context.GlobalUsers.AddAsync(User);
         }
 
-        public GlobalUser? GetByUserName(string  UserName)
+        public GlobalUser? GetByNormalizedUserEMail(string NormalizedUserEmail)
         {
-            return _context.GlobalUsers.Where(x => x.UserName.Equals(UserName)).FirstOrDefault() ?? null;
+            return _context.GlobalUsers.Where(x => x.NormalizedUserEmail.Equals(NormalizedUserEmail)).FirstOrDefault() ?? null;
         }
 
         public async Task UpdateAsync(GlobalUser user)
         {
+            user.NormalizedUserEmail = user.NormalizedUserEmail.ToUpperInvariant();
+
             _context.GlobalUsers.Update(user);
             return ;
         }
 
-        public async Task DeleteAsync(string UserName)
+        public async Task DeleteAsync(string NormalizedUserEmail)
         {
-            var User = _context.GlobalUsers.Where(x => x.UserName == UserName).FirstOrDefault();
+            var User = _context.GlobalUsers.Where(x => x.NormalizedUserEmail == NormalizedUserEmail).FirstOrDefault();
             if (User != null)
             {
                 _context.GlobalUsers.Remove(User);

@@ -15,15 +15,15 @@ namespace Skipperu.Data.Users.data
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string GlobalUserID { get; set; }
         public string? AspFK { get; set; }     
-        public string? ExternalAuthFK { get; set; }
+        public string? GoogleAuthFK { get; set; }
 
-        public string UserName { get; set; }
+        public string NormalizedUserEmail { get; set; }
 
         public IdentityUser? AspUser { get; set; }
-        public ExternalAuthUser? ExternalAuthUser { get; set; }
+        public GoogleUser? GoogleAuth { get; set; }
 
         public bool IsAspIdentityUser => AspFK != null;
-        public bool IsExternalAuthUser => ExternalAuthFK != null;
+        public bool IsExternalAuthUser => GoogleAuthFK != null;
 
 
     }
