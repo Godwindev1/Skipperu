@@ -16,7 +16,10 @@ namespace Skipperu.Controllers.AccountControllers
         {
             try
             {
-                await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties { IsPersistent = true, RedirectUri = "Accounts/RegisterGoogleUser" });
+                if (!User.Identity.IsAuthenticated)
+                    await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties { IsPersistent = true, RedirectUri = "Accounts/SelectAction" });
+                else
+                    return;
             }
             catch (Exception ex)
             {
@@ -25,8 +28,40 @@ namespace Skipperu.Controllers.AccountControllers
 
         }
 
-        [HttpGet("RegisterGoogleUser")]
-        public async Task<ActionResult<ResultMessage>> RegisterNewUser()
+        [HttpGet("SelectAction")]
+        public async Task<ActionResult<ResultMessage>> SelectEndpoint()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+
+                string EmailCLaim = User.Claims
+                    .Where(x => x.Type == ClaimTypes.Email)
+                    .ToList()
+                    .FirstOrDefault().Value;
+
+
+                if (_GoogleUserRepo.GetByNormalizedUserEMail(EmailCLaim.ToUpperInvariant()) != null)
+                {
+                    return new ResultMessage {
+                        Message = "Authenticated", 
+                        type = MessageTypes.AUTHENTICATED 
+                    };
+                }
+                else
+                {
+                    return (ActionResult<ResultMessage>) await RegisterNewUser();
+                }
+            }
+            else
+            {
+                return new ResultMessage { 
+                    Message = $"FATAL ERROR: Authentication Challenge {GoogleDefaults.AuthenticationScheme} Failed ", 
+                    type = MessageTypes.ERROR 
+                };
+            }
+        }
+
+        private async Task<ActionResult<ResultMessage>> RegisterNewUser()
         {
             await HttpContext.AuthenticateAsync();
 
@@ -69,7 +104,6 @@ namespace Skipperu.Controllers.AccountControllers
                     }
 
                     //TODO: Redirect To Application Dashboard
-
                     return new ResultMessage { Message = "Google Authentication Successful", type = MessageTypes.AUTHENTICATED };
                 }
                 else
