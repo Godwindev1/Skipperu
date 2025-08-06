@@ -42,4 +42,4 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-[MIT]
+[License](https://mit-license.org/)
